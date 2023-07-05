@@ -12,18 +12,18 @@ public class ProductResponse {
     private Long id;
     private String productNumber;
     private ProductType type;
-    private ProductSellingStatus sellingType;
+    private ProductSellingStatus sellingStatus;
     private String name;
     private int price;
 
 
     // private으로 만들고 of로 접근 가능
     @Builder
-    private ProductResponse(Long id, String productNumber, ProductType type, ProductSellingStatus sellingType, String name, int price) {
+    private ProductResponse(Long id, String productNumber, ProductType type, ProductSellingStatus sellingStatus, String name, int price) {
         this.id = id;
         this.productNumber = productNumber;
         this.type = type;
-        this.sellingType = sellingType;
+        this.sellingStatus = sellingStatus;
         this.name = name;
         this.price = price;
     }
@@ -33,7 +33,7 @@ public class ProductResponse {
                 .id(product.getId())
                 .productNumber(product.getProductNumber())
                 .type(product.getType())
-                .sellingType(product.getSellingStatus())
+                .sellingStatus(product.getSellingStatus())
                 .name(product.getName())
                 .price(product.getPrice())
                 .build();
