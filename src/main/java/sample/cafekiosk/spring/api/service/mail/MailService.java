@@ -1,6 +1,7 @@
 package sample.cafekiosk.spring.api.service.mail;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import sample.cafekiosk.spring.client.mail.MailSendClient;
 import sample.cafekiosk.spring.domain.history.mail.MailSendHistory;
@@ -27,9 +28,14 @@ public class MailService {
                     .build()
             );
 
+            mailSendClient.a();
+            mailSendClient.b();
+            mailSendClient.c();
+
             return true;
         }
 
         return false;
     }
+
 }
