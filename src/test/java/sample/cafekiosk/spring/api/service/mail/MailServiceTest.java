@@ -4,24 +4,22 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sample.cafekiosk.spring.client.mail.MailSendClient;
 import sample.cafekiosk.spring.domain.history.mail.MailSendHistory;
 import sample.cafekiosk.spring.domain.history.mail.MailSendHistoryRepository;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.doReturn;
 
 @ExtendWith(MockitoExtension.class)
 class MailServiceTest {
 
-    @Spy
+    @Mock
     private MailSendClient mailSendClient;
 
     @Mock
@@ -36,13 +34,8 @@ class MailServiceTest {
     void sendMail() {
         // given (MailService 에서 주입 받는 객체를 순수 Mockito 객체로 생성
         // @Mock stubbing
-//        Mockito.when(mailSendClient.sendEmail(anyString(), anyString(), anyString(), anyString()))
-//                .thenReturn(true); // any(String.class) String 값 아무거나 상관없음
-
-        // @Spy 로 Stubbing
-        doReturn(true)
-                .when(mailSendClient)
-                .sendEmail(anyString(), anyString(), anyString(), anyString());
+        BDDMockito.given(mailSendClient.sendEmail(anyString(), anyString(), anyString(), anyString()))
+                .willReturn(true);
 
         // when
         boolean result = mailService.sendMail("", "", "", "");
