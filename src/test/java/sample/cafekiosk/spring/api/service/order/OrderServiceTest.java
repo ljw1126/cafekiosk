@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import sample.cafekiosk.spring.IntegrationTestSupport;
 import sample.cafekiosk.spring.api.controller.order.request.OrderCreateRequest;
 import sample.cafekiosk.spring.api.service.order.response.OrderResponse;
 import sample.cafekiosk.spring.domain.order.OrderRepository;
@@ -24,11 +25,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static sample.cafekiosk.spring.domain.product.ProductSellingStatus.SELLING;
 
-//@Transactional
-//@DataJpaTest // service bean을 주입 못함
-@ActiveProfiles("test")
-@SpringBootTest
-class OrderServiceTest {
+class OrderServiceTest extends IntegrationTestSupport {
 
     @Autowired
     private OrderService orderService;

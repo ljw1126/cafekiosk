@@ -8,6 +8,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import sample.cafekiosk.spring.ControllerTestSupport;
 import sample.cafekiosk.spring.api.service.product.ProductService;
 import sample.cafekiosk.spring.api.service.product.response.ProductResponse;
 import sample.cafekiosk.spring.domain.product.ProductSellingStatus;
@@ -24,17 +25,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(controllers = ProductController.class)
-class ProductControllerTest {
+class ProductControllerTest extends ControllerTestSupport {
 
-    @Autowired
-    private MockMvc mockMvc;
-
-    @MockBean
-    private ProductService productService;
-
-    @Autowired
-    private ObjectMapper objectMapper;
 
     @DisplayName("신규 상품을 등록한다")
     @Test
