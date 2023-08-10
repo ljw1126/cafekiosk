@@ -36,6 +36,9 @@ dependencies {
 
     // h2
     runtimeOnly 'com.h2database:h2'
+
+    // Guava - https://github.com/google/guava
+    implementation("com.google.guava:guava:31.1-jre")
 }
 
 tasks.named('test') {
