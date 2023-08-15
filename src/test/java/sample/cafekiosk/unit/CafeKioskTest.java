@@ -13,11 +13,13 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class CafeKioskTest {
 
+    @DisplayName("수동 테스트")
     @Test
     void add_manual_test() {
         CafeKiosk cafeKiosk = new CafeKiosk();
         cafeKiosk.add(new Americano());
 
+        // 콘솔에 출력하는 방식의 경우 사람이 검증해야 하고, 다른 사람이 보았을 때 테스트 의도를 파악하기 어렵다
         System.out.println(">> 담긴 음료 수 : " + cafeKiosk.getBeverages().size());
         System.out.println(">> 담긴 음료 : " + cafeKiosk.getBeverages().get(0).getName());
     }
