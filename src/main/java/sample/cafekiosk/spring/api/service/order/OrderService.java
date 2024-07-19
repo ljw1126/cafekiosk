@@ -32,7 +32,7 @@ public class OrderService {
     private final StockRepository stockRepository;
 
     public OrderResponse createOrder(OrderCreateServiceRequest request, LocalDateTime registeredDateTime) {
-        List<String> productNumbers  = request.getProductNumbers();
+        List<String> productNumbers = request.getProductNumbers();
         List<Product> duplicateProducts = findProductBy(productNumbers);
 
         deductStockQuantities(duplicateProducts);
@@ -44,6 +44,19 @@ public class OrderService {
         return OrderResponse.of(saveOrder);
     }
 
+    private List<Product> findProductBy(List<String> productNumbers) {
+        // Product
+        List<Product> products = productRepository.findAllByProductNumberIn(productNumbers);
+
+        // 중복 상품에 대한 처리 (001 아메리카노 1잔인 경우)
+        Map<String, Product> productMap = products.stream()
+                .collect(Collectors.toMap(Product::getProductNumber, p -> p)); // { "001" : 상품Object }
+
+        List<Product> duplicateProducts = productNumbers.stream().map(productMap::get)
+                .collect(Collectors.toList());
+
+        return duplicateProducts;
+    }
 
     /**
      * Stock Entity 추가 이후 수정 필요
@@ -63,27 +76,16 @@ public class OrderService {
         Map<String, Long> productCountingMap = createCountingMapBy(stockProductNumbers);
 
         // 4) 재고 차감 시도(stockProductNumber 중복 제거)
-        for(String stockProductNumber : new HashSet<>(stockProductNumbers)) {
+        for (String stockProductNumber : new HashSet<>(stockProductNumbers)) {
             Stock stock = stockMap.get(stockProductNumber);
             int quantity = productCountingMap.get(stockProductNumber).intValue();
 
-            if(stock.isQuantityLessThan(quantity)) {
+            if (stock.isQuantityLessThan(quantity)) {
                 throw new IllegalArgumentException("재고가 부족한 상품이 있습니다");
             }
 
             stock.deductQuantity(quantity);
         }
-    }
-
-    private static Map<String, Long> createCountingMapBy(List<String> stockProductNumbers) {
-        return stockProductNumbers.stream()
-                .collect(Collectors.groupingBy(p -> p, Collectors.counting()));
-    }
-
-    private Map<String, Stock> createStockMapBy(List<String> stockProductNumbers) {
-        List<Stock> stocks = stockRepository.findAllByProductNumberIn(stockProductNumbers);
-        return stocks.stream()
-                .collect(Collectors.toMap(Stock::getProductNumber, s -> s));
     }
 
     private static List<String> extractStockProductNumbers(List<Product> products) {
@@ -93,17 +95,15 @@ public class OrderService {
                 .collect(Collectors.toList());
     }
 
-    private List<Product> findProductBy(List<String> productNumbers) {
-        // Product
-        List<Product> products = productRepository.findAllByProductNumberIn(productNumbers);
-
-        // 중복 상품에 대한 처리 (001 아메리카노 1잔인 경우)
-        Map<String, Product> productMap = products.stream()
-                .collect(Collectors.toMap(Product::getProductNumber, p -> p)); // { "001" : 상품Object }
-
-        List<Product> duplicateProducts = productNumbers.stream().map(productMap::get)
-                .collect(Collectors.toList());
-
-        return duplicateProducts;
+    private Map<String, Stock> createStockMapBy(List<String> stockProductNumbers) {
+        List<Stock> stocks = stockRepository.findAllByProductNumberIn(stockProductNumbers);
+        return stocks.stream()
+                .collect(Collectors.toMap(Stock::getProductNumber, s -> s));
     }
+
+    private static Map<String, Long> createCountingMapBy(List<String> stockProductNumbers) {
+        return stockProductNumbers.stream()
+                .collect(Collectors.groupingBy(p -> p, Collectors.counting()));
+    }
+
 }
